@@ -5,60 +5,71 @@ calculation = ""
 def addToCalculation(symbol):
     global calculation
     calculation += str(symbol)
-    textResult.delete(1.0, "end")
-    textResult.insert(1.0, calculation)
+    textResult.delete("1.0", "end")
+    textResult.insert("1.0", calculation)
 
 def evaluateCalculation():
     global calculation
     try:
         calculation = str(eval(calculation))
-        calculation = ""
-        textResult.delete(1.0,"end")
-        textResult.insert(1.0,calculation)
+        textResult.delete("1.0", "end")
+        textResult.insert("1.0", calculation)
     except:
         clearField()
-        textResult.insert(1.0,"Error")
+        textResult.insert("1.0", "Error")
 
 def clearField():
     global calculation
     calculation = ""
-    textResult.delete(1.0, "end")
-
+    textResult.delete("1.0", "end")
 
 # Graphical user interface
 root = tk.Tk()
-root.geometry("300x275")
+root.geometry("300x430")
+root.title("Calculator")
 
 textResult = tk.Text(root, height=2, width=16, font=("Arial", 24))
-textResult.grid(columnspan=5)
+textResult.grid(columnspan=5, pady=10)
 
-# lambda refers to a function that does this if called
-btn_1 = tk.Button(root, text="1", command=lambda: addToCalculation(1), width=5, font=("Arial",14))
-btn_1.grid(row=2, column=1)
-btn_2 = tk.Button(root, text="2", command=lambda: addToCalculation(2), width=5, font=("Arial",14))
-btn_2.grid(row=2, column=2)
-btn_3 = tk.Button(root, text="3", command=lambda: addToCalculation(3), width=5, font=("Arial",14))
-btn_3.grid(row=2, column=3)
-btn_4 = tk.Button(root, text="4", command=lambda: addToCalculation(4), width=5, font=("Arial",14))
-btn_4.grid(row=3, column=1)
-btn_5 = tk.Button(root, text="5", command=lambda: addToCalculation(5), width=5, font=("Arial",14))
-btn_5.grid(row=3, column=2)
-btn_6 = tk.Button(root, text="6", command=lambda: addToCalculation(6), width=5, font=("Arial",14))
-btn_6.grid(row=3, column=3)
-btn_7 = tk.Button(root, text="7", command=lambda: addToCalculation(7), width=5, font=("Arial",14))
-btn_7.grid(row=4, column=1)
-btn_8 = tk.Button(root, text="8", command=lambda: addToCalculation(8), width=5, font=("Arial",14))
-btn_8.grid(row=4, column=2)
-btn_9 = tk.Button(root, text="9", command=lambda: addToCalculation(9), width=5, font=("Arial",14))
-btn_9.grid(row=4, column=3)
-btn_0 = tk.Button(root, text="0", command=lambda: addToCalculation(0), width=5, font=("Arial",14))
-btn_0.grid(row=5, column=2)
-btn_plus = tk.Button(root, text="+", command=lambda: addToCalculation("+"), width=5, font=("Arial",14))
-btn_plus.grid(row=2, column=4)
-btn_min = tk.Button(root, text="-", command=lambda: addToCalculation("-"), width=5, font=("Arial",14))
-btn_min.grid(row=3, column=4)
-btn_mul = tk.Button(root, text="*", command=lambda: addToCalculation("*"), width=5, font=("Arial",14))
-btn_mul.grid(row=4, column=4)
-btn_div = tk.Button(root, text="/", command=lambda: addToCalculation("/"), width=5, font=("Arial",14))
-btn_div.grid(row=5, column=4)
+button_config = {
+    "height": 2,
+    "width": 3,
+    "font": ("Arial", 14),
+    "bd": 0,
+    "relief": "ridge",
+}
+
+# Button symbols and their grid positions
+button_symbols = {
+    "1": (2, 1),
+    "2": (2, 2),
+    "3": (2, 3),
+    "4": (3, 1),
+    "5": (3, 2),
+    "6": (3, 3),
+    "7": (4, 1),
+    "8": (4, 2),
+    "9": (4, 3),
+    "0": (5, 2),
+    "+": (2, 4),
+    "-": (3, 4),
+    "*": (4, 4),
+    "/": (5, 4),
+    "(": (5, 1),
+    ")": (5, 3),
+}
+
+# Create and place the buttons
+for symbol, (row, column) in button_symbols.items():
+    btn = tk.Button(root, text=symbol, command=lambda symbol=symbol: addToCalculation(symbol), **button_config)
+    btn.grid(row=row, column=column, padx=5, pady=5)
+
+# Equal button
+btn_equals = tk.Button(root, text="=", command=evaluateCalculation, **button_config)
+btn_equals.grid(row=6, column=3, columnspan=2)
+
+# Clear button
+btn_clear = tk.Button(root, text="C", command=clearField, width=11, font=("Arial", 14), bd=0, relief="ridge")
+btn_clear.grid(row=6, column=1, columnspan=2)
+
 root.mainloop()
